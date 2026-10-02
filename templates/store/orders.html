@@ -1,0 +1,124 @@
+{% extends "store/base.html" %}
+
+{% block title %}My Orders — ShopEase{% endblock %}
+
+{% block content %}
+
+<div class="page-wrap">
+
+    <div class="section-head">
+        <div>
+            <span class="eyebrow">ACCOUNT</span>
+            <h1>My Orders</h1>
+        </div>
+    </div>
+
+    {% for order in orders %}
+
+    <div class="order-card">
+
+        <!-- Order Header -->
+        <div class="order-header">
+            <div>
+                <strong>Order #{{ order.id }}</strong>
+                <span>
+                    {{ order.created_at|date:"d M Y, h:i A" }}
+                </span>
+            </div>
+
+            <div class="order-summary">
+                <span class="status">
+                    {{ order.status }}
+                </span>
+
+                <strong>
+                    ₹{{ order.total|floatformat:0 }}
+                </strong>
+            </div>
+        </div>
+
+
+        <!-- Ordered Products -->
+        <div class="order-products">
+
+            {% for item in order.items.all %}
+
+            <div class="order-product">
+
+                <img
+                    src="{{ item.product.image_url }}"
+                    alt="{{ item.product.name }}"
+                    class="order-product-image"
+                >
+
+                <div class="order-product-info">
+
+                    <strong>
+                        {{ item.product.name }}
+                    </strong>
+
+                    <span>
+                        Quantity: {{ item.quantity }}
+                    </span>
+
+                    <span>
+                        ₹{{ item.price|floatformat:0 }}
+                    </span>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- Cancel Order -->
+        {% if order.status != "Cancelled" %}
+
+        <form
+            method="post"
+            action="{% url 'cancel_order' order.id %}"
+            class="cancel-order-form"
+        >
+
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="cancel-order-btn"
+            >
+                Cancel Order
+            </button>
+
+        </form>
+
+        {% endif %}
+
+    </div>
+
+    {% empty %}
+
+    <div class="empty large">
+
+        <h2>No orders yet</h2>
+
+        <p>
+            Your placed orders will appear here.
+        </p>
+
+        <a
+            class="btn btn-dark"
+            href="{% url 'home' %}"
+        >
+            Start Shopping
+        </a>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

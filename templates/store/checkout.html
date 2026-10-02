@@ -1,0 +1,154 @@
+{% extends "store/base.html" %}
+
+{% block title %}Checkout — ShopEase{% endblock %}
+
+{% block content %}
+
+<div class="page-wrap">
+
+    <div class="section-head">
+        <div>
+            <span class="eyebrow">SECURE CHECKOUT</span>
+            <h1>Complete your order</h1>
+        </div>
+    </div>
+
+    <div class="checkout-layout">
+
+        <form method="post" class="form-card">
+
+            {% csrf_token %}
+
+            <h2>Delivery details</h2>
+
+            <!-- Full Name -->
+            <label>
+                Full name
+
+                <div class="password-wrapper">
+                    <input
+                        type="text"
+                        name="full_name"
+                        id="full_name"
+                        required
+                        placeholder="Your full name"
+                    >
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        onclick="toggleField('full_name', this)"
+                        aria-label="Hide full name"
+                    >
+                        👁️
+                    </button>
+                </div>
+            </label>
+
+            <!-- Phone Number -->
+            <label>
+                Phone number
+
+                <div class="password-wrapper">
+                    <input
+                        type="text"
+                        name="phone"
+                        id="phone"
+                        inputmode="numeric"
+                        maxlength="10"
+                        required
+                        placeholder="Your phone number"
+                    >
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        onclick="toggleField('phone', this)"
+                        aria-label="Hide phone number"
+                    >
+                        👁️
+                    </button>
+                </div>
+            </label>
+
+            <!-- Delivery Address -->
+            <label>
+                Delivery address
+
+                <textarea
+                    name="address"
+                    required
+                    placeholder="House number, street, city, state, PIN"
+                ></textarea>
+            </label>
+
+            <button
+                class="btn btn-dark btn-full"
+                type="submit"
+            >
+                Place Order · ₹{{ total|floatformat:0 }}
+            </button>
+
+        </form>
+
+        <!-- Order Summary -->
+        <aside class="summary">
+
+            <h2>Your Items</h2>
+
+            {% for product, qty in cart_items %}
+
+            <div class="mini-item">
+
+                <img
+                    src="{{ product.image_url }}"
+                    alt="{{ product.name }}"
+                >
+
+                <span>
+                    {{ product.name }} × {{ qty }}
+                </span>
+
+                <b>
+                    ₹{% widthratio product.price 1 qty %}
+                </b>
+
+            </div>
+
+            {% endfor %}
+
+            <hr>
+
+            <div class="grand">
+                <span>Total</span>
+                <b>₹{{ total|floatformat:0 }}</b>
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>
+
+<script>
+function toggleField(fieldId, button) {
+
+    const field = document.getElementById(fieldId);
+
+    if (field.type === "text") {
+
+        field.type = "password";
+        button.textContent = "🙈";
+        button.setAttribute("aria-label", "Show");
+
+    } else {
+
+        field.type = "text";
+        button.textContent = "👁️";
+        button.setAttribute("aria-label", "Hide");
+
+    }
+}
+</script>
+
+{% endblock %}

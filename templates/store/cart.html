@@ -1,0 +1,28 @@
+{% extends "store/base.html" %}
+{% block title %}Your Cart — ShopEase{% endblock %}
+{% block content %}
+<div class="page-wrap">
+    <div class="section-head"><div><span class="eyebrow">YOUR SHOPPING BAG</span><h1>Shopping Cart</h1></div></div>
+    {% if cart_items %}
+    <div class="cart-layout">
+        <div class="cart-list">
+        {% for product, qty in cart_items %}
+            <div class="cart-item">
+                <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                <div class="cart-main"><h3>{{ product.name }}</h3><p>{{ product.category }}</p>
+                    <form method="post" action="{% url 'update_cart' product.id %}" class="qty-form">
+                        {% csrf_token %}<input type="number" name="quantity" min="1" max="{{ product.stock }}" value="{{ qty }}"><button>Update</button>
+                    </form>
+                </div>
+                <strong>₹{% widthratio product.price 1 qty %}</strong>
+                <a class="remove" href="{% url 'remove_from_cart' product.id %}">Remove</a>
+            </div>
+        {% endfor %}
+        </div>
+        <aside class="summary"><h2>Order Summary</h2><div><span>Subtotal</span><b>₹{{ total|floatformat:0 }}</b></div><div><span>Delivery</span><b>Free</b></div><hr><div class="grand"><span>Total</span><b>₹{{ total|floatformat:0 }}</b></div><a class="btn btn-dark btn-full" href="{% url 'checkout' %}">Proceed to Checkout</a></aside>
+    </div>
+    {% else %}
+    <div class="empty large"><div class="empty-icon">🛒</div><h2>Your cart is empty</h2><p>Add a few products and they'll appear here.</p><a class="btn btn-dark" href="{% url 'home' %}">Continue Shopping</a></div>
+    {% endif %}
+</div>
+{% endblock %}

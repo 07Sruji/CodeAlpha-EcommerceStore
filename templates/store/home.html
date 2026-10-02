@@ -1,0 +1,56 @@
+{% extends "store/base.html" %}
+{% block title %}ShopEase — Modern Online Store{% endblock %}
+{% block content %}
+<section class="hero">
+    <div class="hero-copy">
+        <span class="eyebrow">NEW SEASON · CURATED FOR YOU</span>
+        <h1>Find things you'll <span>love.</span></h1>
+        <p>Explore everyday essentials, tech and lifestyle products with a clean, simple shopping experience.</p>
+        <a class="btn btn-dark" href="#products">Shop Collection <span>→</span></a>
+    </div>
+    <div class="hero-art">
+        <div class="hero-circle"></div>
+        <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1000&q=85" alt="Shopping collection">
+    </div>
+</section>
+
+<section class="content-wrap" id="products">
+    <div class="section-head">
+        <div><span class="eyebrow">OUR COLLECTION</span><h2>Popular products</h2></div>
+        <form class="search" method="get">
+            <input name="q" value="{{ query }}" placeholder="Search products...">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <div class="chips">
+        <a class="{% if not request.GET.category %}active{% endif %}" href="{% url 'home' %}#products">All</a>
+        {% for category in categories %}
+        <a class="{% if request.GET.category == category %}active{% endif %}" href="?category={{ category|urlencode }}#products">{{ category }}</a>
+        {% endfor %}
+    </div>
+
+    <div class="product-grid">
+        {% for product in products %}
+        <article class="product-card">
+            <a href="{% url 'product_detail' product.id %}" class="product-image">
+                <img src="{{ product.image_url }}" alt="{{ product.name }}" loading="lazy">
+                <span class="badge">{{ product.category }}</span>
+            </a>
+            <div class="product-info">
+                <div>
+                    <h3>{{ product.name }}</h3>
+                    <p>{{ product.description|truncatechars:70 }}</p>
+                </div>
+                <div class="product-bottom">
+                    <strong>₹{{ product.price|floatformat:0 }}</strong>
+                    <a class="icon-btn" href="{% url 'add_to_cart' product.id %}" title="Add to cart">+</a>
+                </div>
+            </div>
+        </article>
+        {% empty %}
+        <div class="empty"><h3>No products found</h3><p>Try another search.</p></div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

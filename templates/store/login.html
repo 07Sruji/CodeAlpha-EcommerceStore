@@ -1,0 +1,82 @@
+{% extends "store/base.html" %}
+{% block title %}Login — ShopEase{% endblock %}
+
+{% block content %}
+
+<div class="auth-page">
+    <div class="auth-card">
+        <span class="brand-center">S</span>
+        <span class="eyebrow">WELCOME BACK</span>
+
+```
+    <h1>Sign in</h1>
+    <p>Access your cart and orders.</p>
+
+    <form method="post" autocomplete="off">
+        {% csrf_token %}
+
+        <label>
+            Username
+            <input
+                type="text"
+                name="username"
+                autocomplete="off"
+                required
+                autofocus
+            >
+        </label>
+
+        <label>
+            Password
+            <div class="password-wrapper">
+                <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    autocomplete="new-password"
+                    required
+                >
+
+                <button
+                    type="button"
+                    class="password-toggle"
+                    onclick="togglePassword()"
+                    aria-label="Show password"
+                >
+                    👁️
+                </button>
+            </div>
+        </label>
+
+        <button type="submit" class="btn btn-dark btn-full">
+            Sign In
+        </button>
+    </form>
+
+    <p class="auth-bottom">
+        New here?
+        <a href="{% url 'register' %}">Create an account</a>
+    </p>
+</div>
+```
+
+</div>
+
+<script>
+function togglePassword() {
+    const password = document.getElementById("password");
+    const toggle = document.querySelector(".password-toggle");
+
+    if (password.type === "password") {
+        password.type = "text";
+        toggle.textContent = "🙈";
+        toggle.setAttribute("aria-label", "Hide password");
+    } else {
+        password.type = "password";
+        toggle.textContent = "👁️";
+        toggle.setAttribute("aria-label", "Show password");
+    }
+}
+</script>
+
+{% endblock %}
